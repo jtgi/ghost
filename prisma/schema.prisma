@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id
+
+  status     String  @default("active")
+  username   String
+  avatarUrl  String?
+  signerUuid String? @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  teammates Teammate[]
+  grants    Grant[]
+  castLogs  CastLog[]
+}
+
+model Team {
+  id String @id @default(cuid())
+
+  name String
+
+  teammates Teammate[]
+  grants    Grant[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  castLogs  CastLog[]
+}
+
+model Grant {
+  id String @id @default(cuid())
+
+  user   User   @relation(fields: [userId], references: [id])
+  team   Team   @relation(fields: [teamId], references: [id])
+  userId String
+  teamId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, teamId])
+}
+
+model Teammate {
+  id String @id @default(cuid())
+
+  user   User   @relation(fields: [userId], references: [id])
+  team   Team   @relation(fields: [teamId], references: [id])
+  userId String
+  teamId String
+
+  @@unique([userId, teamId])
+}
+
+model CastLog {
+  id String @id @default(cuid())
+
+  hash        String
+  castContent String
+  user        User   @relation(fields: [userId], references: [id])
+  team        Team   @relation(fields: [teamId], references: [id])
+  userId      String
+  teamId      String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

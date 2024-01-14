@@ -1,0 +1,13 @@
+node_modules
+
+/prisma/*.db
+/prisma/*.db*
+/.cache
+/build
+/public/build
+.env
+.DS_Store
+docs.txt
+# Sentry Config File
+.sentryclirc
+scripts/*.json
