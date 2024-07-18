@@ -2,7 +2,7 @@
 Team based alt accounts.
 https://anonymous.fly.dev
 
-[inspired by @matthew]
+*inspired by [@matthew](https://warpcast.com/matthew) and the late night crew*
 
 ## Summary
 - This is [Remix](https://remix.run) project; most business logic is in `/app/routes`.
