@@ -2,7 +2,7 @@
 
 import { NavLink } from "@remix-run/react";
 
-import { cn } from "~/lib/utils";
+import { cn } from "~/lib/utils.client";
 
 export interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
   items: {

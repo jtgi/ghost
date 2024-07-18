@@ -1,4 +1,4 @@
-import { cn } from "~/lib/utils";
+import { cn } from "~/lib/utils.client";
 import { Input } from "./input";
 import { Controller } from "react-hook-form";
 
@@ -18,29 +18,19 @@ export function FieldLabel(
     <div className={cn(`flex items-center gap-1`, props.className)}>
       {_position === "left" ? (
         <>
-          <label
-            className={cn("text-sm font-medium text-gray-700", _labelClassName)}
-            {...props.labelProps}
-          >
+          <label className={cn("text-sm font-medium text-gray-700", _labelClassName)} {...props.labelProps}>
             {props.label}
           </label>
           {props.children}
-          {props.description && (
-            <div className="text-xs text-gray-500">{props.description}</div>
-          )}
+          {props.description && <div className="text-xs text-gray-500">{props.description}</div>}
         </>
       ) : (
         <>
           {props.children}
-          <label
-            className={cn("text-sm font-medium text-gray-700", _labelClassName)}
-            {...props.labelProps}
-          >
+          <label className={cn("text-sm font-medium text-gray-700", _labelClassName)} {...props.labelProps}>
             {props.label}
           </label>
-          {props.description && (
-            <div className="text-xs text-gray-500">{props.description}</div>
-          )}
+          {props.description && <div className="text-xs text-gray-500">{props.description}</div>}
         </>
       )}
     </div>
@@ -101,10 +91,7 @@ export function Field({
 } & React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div {...props}>
-      <label
-        htmlFor={name}
-        className="block mb-2 text-sm font-medium text-gray-700"
-      >
+      <label htmlFor={name} className="block mb-2 text-sm font-medium text-gray-700">
         {label}
       </label>
       <Input id={name} name={name} {...inputProps} />
