@@ -58,7 +58,7 @@ export async function action({ request }: ActionFunctionArgs) {
     .safeParse(data);
 
   if (!result.success) {
-    throw errorResponse({
+    return errorResponse({
       request,
       message: formatZodError(result.error),
     });

@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import { redirect, typedjson, useTypedLoaderData } from "remix-typedjson";
+import { typedjson, useTypedLoaderData } from "remix-typedjson";
 
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Button } from "~/components/ui/button";
@@ -22,13 +22,11 @@ import {
   DialogDescription,
   DialogTitle,
 } from "~/components/ui/dialog";
-import { FieldLabel } from "~/components/ui/fields";
 import { Input } from "~/components/ui/input";
 import { z } from "zod";
 import { neynar } from "~/lib/neynar.server";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { useEffect, useRef } from "react";
-import { flushSync } from "react-dom";
 import { User } from "@prisma/client";
 import { Textarea } from "~/components/ui/textarea";
 
@@ -49,164 +47,159 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export async function action({ request, params }: ActionFunctionArgs) {
-  try {
-    const teamId = params.id!;
+  const teamId = params.id!;
 
-    const user = await requireUser({ request });
-    const team = await requireUserBelongsToTeam(user.id, teamId);
+  const user = await requireUser({ request });
+  const team = await requireUserBelongsToTeam(user.id, teamId);
 
-    const formData = await request.formData();
-    const data = Object.fromEntries(formData);
+  const formData = await request.formData();
+  const data = Object.fromEntries(formData);
 
-    const intent = z
-      .object({
-        intent: z.enum(["addTeammate", "cast"]),
-      })
-      .safeParse(data);
+  const intent = z
+    .object({
+      intent: z.enum(["addTeammate", "cast"]),
+    })
+    .safeParse(data);
 
-    if (!intent.success) {
-      throw errorResponse({
-        request,
-        message: "go away",
-      });
-    }
-
-    if (intent.data.intent === "addTeammate") {
-      const result = z
-        .object({
-          username: z
-            .string()
-            .trim()
-            .min(1)
-            .transform((u) => u.toLowerCase()),
-        })
-        .safeParse(data);
-
-      if (!result.success) {
-        throw errorResponse({
-          request,
-          message: formatZodError(result.error),
-        });
-      }
-
-      const rsp = await neynar.lookupUserByUsername(result.data.username).catch(() => null);
-
-      if (!rsp) {
-        throw errorResponse({
-          request,
-          message: `@${result.data.username} not found, try again?`,
-        });
-      }
-
-      const neynarUser = rsp.result.user;
-
-      const updatedUser = await db.user.upsert({
-        where: {
-          id: String(neynarUser.fid),
-        },
-        update: {
-          username: neynarUser.username,
-          avatarUrl: neynarUser.pfp.url,
-        },
-        create: {
-          id: String(neynarUser.fid),
-          username: neynarUser.username,
-          avatarUrl: neynarUser.pfp.url,
-        },
-      });
-
-      await db.teammate.upsert({
-        where: {
-          userId_teamId: {
-            teamId,
-            userId: String(neynarUser.fid),
-          },
-        },
-        create: {
-          teamId,
-          userId: String(neynarUser.fid),
-        },
-        update: {},
-      });
-
-      return successResponse({
-        request,
-        message: `Added @${updatedUser.username}`,
-        data: {
-          ok: true,
-        },
-      });
-    } else if (intent.data.intent === "cast") {
-      console.log("cast intent");
-      const result = z
-        .object({
-          castContent: z.string().trim().min(1),
-          channelId: z.string().optional(),
-          embeds: z
-            .array(z.string().url())
-            .optional()
-            .transform((embeds) => embeds?.map((e) => ({ url: e }))),
-          authorId: z.string().trim().min(1),
-        })
-        .safeParse(data);
-
-      if (!result.success) {
-        return errorResponse({
-          request,
-          message: formatZodError(result.error),
-        });
-      }
-
-      const { castContent, authorId } = result.data;
-      await requireCanCastAsAuthor({
-        userId: user.id,
-        teamId: team.id,
-        authorId,
-      });
-
-      const authorSigner = await db.user.findFirstOrThrow({
-        select: {
-          signerUuid: true,
-        },
-        where: {
-          id: result.data.authorId,
-          signerUuid: {
-            not: null,
-          },
-        },
-      });
-
-      const rsp = await neynar.publishCast(authorSigner.signerUuid!, castContent, {
-        channelId: result.data.channelId,
-        embeds: result.data.embeds,
-      });
-
-      await db.castLog.create({
-        data: {
-          userId: user.id,
-          teamId: team.id,
-          castContent,
-          hash: rsp.hash,
-        },
-      });
-
-      return successResponse({
-        request,
-        message: "Cast published!",
-        data: {
-          hash: rsp.hash,
-        },
-      });
-    }
-
-    throw errorResponse({
+  if (!intent.success) {
+    return errorResponse({
       request,
       message: "go away",
     });
-  } catch (e) {
-    console.error("caught error", e);
-    throw e;
   }
+
+  if (intent.data.intent === "addTeammate") {
+    const result = z
+      .object({
+        username: z
+          .string()
+          .trim()
+          .min(1)
+          .transform((u) => u.toLowerCase()),
+      })
+      .safeParse(data);
+
+    if (!result.success) {
+      return errorResponse({
+        request,
+        message: formatZodError(result.error),
+      });
+    }
+
+    const rsp = await neynar.lookupUserByUsername(result.data.username).catch(() => null);
+
+    if (!rsp) {
+      return errorResponse({
+        request,
+        message: `@${result.data.username} not found, try again?`,
+      });
+    }
+
+    const neynarUser = rsp.result.user;
+
+    const updatedUser = await db.user.upsert({
+      where: {
+        id: String(neynarUser.fid),
+      },
+      update: {
+        username: neynarUser.username,
+        avatarUrl: neynarUser.pfp.url,
+      },
+      create: {
+        id: String(neynarUser.fid),
+        username: neynarUser.username,
+        avatarUrl: neynarUser.pfp.url,
+      },
+    });
+
+    await db.teammate.upsert({
+      where: {
+        userId_teamId: {
+          teamId,
+          userId: String(neynarUser.fid),
+        },
+      },
+      create: {
+        teamId,
+        userId: String(neynarUser.fid),
+      },
+      update: {},
+    });
+
+    return successResponse({
+      request,
+      message: `Added @${updatedUser.username}`,
+      data: {
+        ok: true,
+      },
+    });
+  } else if (intent.data.intent === "cast") {
+    console.log("cast intent");
+    const result = z
+      .object({
+        castContent: z.string().trim().min(1),
+        channelId: z.string().optional(),
+        embeds: z
+          .array(z.string().url())
+          .optional()
+          .transform((embeds) => embeds?.map((e) => ({ url: e }))),
+        authorId: z.string().trim().min(1),
+      })
+      .safeParse(data);
+
+    if (!result.success) {
+      return errorResponse({
+        request,
+        message: formatZodError(result.error),
+      });
+    }
+
+    const { castContent, authorId } = result.data;
+    await requireCanCastAsAuthor({
+      userId: user.id,
+      teamId: team.id,
+      authorId,
+    });
+
+    const authorSigner = await db.user.findFirstOrThrow({
+      select: {
+        signerUuid: true,
+      },
+      where: {
+        id: result.data.authorId,
+        signerUuid: {
+          not: null,
+        },
+      },
+    });
+
+    const rsp = await neynar.publishCast(authorSigner.signerUuid!, castContent, {
+      channelId: result.data.channelId,
+      embeds: result.data.embeds,
+    });
+
+    await db.castLog.create({
+      data: {
+        userId: user.id,
+        teamId: team.id,
+        castContent,
+        hash: rsp.hash,
+      },
+    });
+
+    return successResponse({
+      request,
+      message: "Cast published!",
+      data: {
+        hash: rsp.hash,
+      },
+    });
+  }
+
+  return errorResponse({
+    request,
+    message: "go away",
+  });
 }
 
 export default function Screen() {
