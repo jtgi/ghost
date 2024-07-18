@@ -1,7 +1,8 @@
 # Ghost
 Team based alt accounts.
+https://anonymous.fly.dev
 
-bootstrapped by @jtgi, inspired by @matthew.
+[inspired by @matthew]
 
 ## Summary
 - This is [Remix](https://remix.run) project; most business logic is in `/app/routes`.
