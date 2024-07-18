@@ -11,7 +11,7 @@ CREATE TABLE "new_CastLog" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "hash" TEXT NOT NULL,
     "castContent" TEXT NOT NULL,
-    "ghostwriterId" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
     "teamId" TEXT NOT NULL,
     "authorId" TEXT,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -19,7 +19,7 @@ CREATE TABLE "new_CastLog" (
     CONSTRAINT "CastLog_ghostwriterId_fkey" FOREIGN KEY ("ghostwriterId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "CastLog_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "Team" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
-INSERT INTO "new_CastLog" ("castContent", "createdAt", "hash", "id", "teamId", "updatedAt") SELECT "castContent", "createdAt", "hash", "id", "teamId", "updatedAt" FROM "CastLog";
+INSERT INTO "new_CastLog" ("castContent", "createdAt", "userId", "hash", "id", "teamId", "updatedAt") SELECT "castContent", "createdAt", "userId", "hash", "id", "teamId", "updatedAt" FROM "CastLog";
 DROP TABLE "CastLog";
 ALTER TABLE "new_CastLog" RENAME TO "CastLog";
 PRAGMA foreign_key_check;
