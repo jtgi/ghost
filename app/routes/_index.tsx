@@ -14,7 +14,7 @@ import "@farcaster/auth-kit/styles.css";
 import { Farcaster } from "~/components/icons/farcaster";
 
 // export meta
-export const meta: MetaFunction<typeof loader> = ({ data }) => {
+export const meta: MetaFunction<typeof loader> = () => {
   return [
     { title: "anon" },
     {
@@ -40,12 +40,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function Home() {
   const { env, user } = useTypedLoaderData<typeof loader>();
-  const navigate = useNavigate();
-  const [loggingIn, setLoggingIn] = useState(false);
-  const [signInComplete, setSignInComplete] = useState(false);
 
   return (
-    <div className="h-full w-full flex flex-col items-center justify-center min-h-screen">
+    <div className="h-full w-full flex flex-col items-center justify-center min-h-screen p-4">
       <div className="max-w-xl flex flex-col justify-center items-center gap-8">
         <div className="flex flex-col items-center">
           <Link to="/~" className="no-underline">
@@ -94,11 +91,14 @@ function LoginButton(props: { user: User | null; env: ReturnType<typeof getShare
   if (user) {
     return (
       <Button
+        asChild
         className="relative w-full min-w-[250px] sm:w-[250px] text-white/80 hover:text-white/100 border-black active:translate-y-[2px] bg-slate-800/80 hover:bg-slate-800 transition-all duration-100"
         variant={"outline"}
       >
-        <span>Go to App</span>
-        <ArrowRight className="mr-2 h-5 w-5" />
+        <Link to="/~" className="no-underline">
+          <span>Go to App</span>
+          <ArrowRight className="ml-1 h-4 w-4" />
+        </Link>
       </Button>
     );
   }

@@ -52,7 +52,7 @@ export default function Index() {
   }, [message?.id]);
 
   return (
-    <div>
+    <div className="p-4">
       {impersonateAs && (
         <div className="fixed top-0 left-0 w-full bg-primary/75 text-white text-center py-2">
           Impersonating as <span className="font-mono">{impersonateAs}</span>.

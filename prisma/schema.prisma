@@ -21,9 +21,10 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  teammates Teammate[]
-  grants    Grant[]
-  castLogs  CastLog[]
+  teammates    Teammate[]
+  grants       Grant[]
+  castLogs     CastLog[]
+  teamsCreated Team[]
 }
 
 model Team {
@@ -31,8 +32,10 @@ model Team {
 
   name String
 
-  teammates Teammate[]
-  grants    Grant[]
+  teammates     Teammate[]
+  grants        Grant[]
+  ownedByUser   User?      @relation(fields: [ownedByUserId], references: [id])
+  ownedByUserId String?
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -67,12 +70,13 @@ model Teammate {
 model CastLog {
   id String @id @default(cuid())
 
-  hash        String
-  castContent String
-  user        User   @relation(fields: [userId], references: [id])
-  team        Team   @relation(fields: [teamId], references: [id])
-  userId      String
-  teamId      String
+  hash          String
+  castContent   String
+  ghostwriter   User    @relation(fields: [ghostwriterId], references: [id])
+  team          Team    @relation(fields: [teamId], references: [id])
+  ghostwriterId String
+  teamId        String
+  authorId      String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -1,9 +1,8 @@
-import { withSentry } from "@sentry/remix";
 import { cssBundleHref } from "@remix-run/css-bundle";
 
 import rootStyles from "~/root.css";
 
-import type { LinksFunction, LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
+import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import {
   Link,
   Links,
@@ -61,8 +60,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function App() {
-  const { env, user } = useTypedLoaderData<typeof loader>();
-
   return (
     <html lang="en">
       <head>
