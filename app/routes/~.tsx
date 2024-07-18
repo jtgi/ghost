@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { commitSession, getSession } from "~/lib/auth.server";
-import { cn } from "~/lib/utils.client";
+import { cn } from "~/lib/utils";
 import { getSharedEnv, requireUser } from "~/lib/utils.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {

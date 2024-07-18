@@ -1,4 +1,4 @@
-import { cn } from "~/lib/utils.client";
+import { cn } from "~/lib/utils";
 import { Input } from "./input";
 import { Controller } from "react-hook-form";
 
