@@ -32,9 +32,6 @@ import { Textarea } from "~/components/ui/textarea";
 import { FieldLabel } from "~/components/ui/fields";
 import { FarcasterIcon } from "~/components/FarcasterIcon";
 
-const actionTypes = ["degen", "ham"] as const;
-export type ActionType = (typeof actionTypes)[number];
-
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const teamId = params.id!;
 
