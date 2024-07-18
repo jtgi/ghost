@@ -196,7 +196,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
     await db.castLog.create({
       data: {
-        ghostwriterId: user.id,
+        userId: user.id,
         authorId: authorSigner.id,
         teamId: team.id,
         castContent,
