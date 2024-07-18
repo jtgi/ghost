@@ -52,7 +52,7 @@ export default function Index() {
   }, [message?.id]);
 
   return (
-    <div className="p-4">
+    <div className="p-6">
       {impersonateAs && (
         <div className="fixed top-0 left-0 w-full bg-primary/75 text-white text-center py-2">
           Impersonating as <span className="font-mono">{impersonateAs}</span>.
@@ -61,11 +61,11 @@ export default function Index() {
 
       <main
         className={cn(
-          "w-full max-w-4xl px-8 mx-auto min-h-screen flex flex-col",
+          "w-full max-w-4xl mx-auto min-h-screen flex flex-col",
           impersonateAs ? "pt-[40px]" : ""
         )}
       >
-        <nav className="w-full flex justify-between max-w-4xl mx-auto py-8">
+        <nav className="w-full flex justify-between max-w-4xl mx-auto pb-8">
           <Link to="/~" className="no-underline">
             <h1 className="logo text-3xl">ghost</h1>
           </Link>

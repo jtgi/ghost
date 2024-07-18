@@ -229,22 +229,8 @@ export default function Screen() {
         <h2>{team.name}</h2>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-        <section className="space-y-4">
-          <div className="flex items-center justify-between pb-2 border-b">
-            <p className="font-medium">Ghostwriters</p>
-            <AddTeammateButton />
-          </div>
-          <div className="divide-y">
-            {team.teammates.map((t) => (
-              <div key={t.id} className="flex items-center gap-4 py-2">
-                <UserInfo user={t.user} />
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+        <section className="space-y-4 col-span-2">
           <div className="flex items-center justify-between pb-2 border-b">
             <p className="font-medium">Shared Accounts</p>
             <Button size={"sm"} variant={"outline"} asChild>
@@ -265,6 +251,20 @@ export default function Screen() {
                   <UserInfo user={grant.user} />
                 </div>
                 <CastComposerButton author={grant.user} ghostwriter={user} />
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="space-y-4">
+          <div className="flex items-center justify-between pb-2 border-b">
+            <p className="font-medium">Ghostwriters</p>
+            <AddTeammateButton />
+          </div>
+          <div className="divide-y">
+            {team.teammates.map((t) => (
+              <div key={t.id} className="flex items-center gap-4 py-2">
+                <UserInfo user={t.user} />
               </div>
             ))}
           </div>
@@ -348,7 +348,7 @@ function CastComposerButton(props: { author: User; ghostwriter: User }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size={"sm"} className="w-auto sm:w-[120px]">
+        <Button size={"sm"} className="w-[120px]">
           <FarcasterIcon className="w-4 h-4 mr-1" /> Cast
         </Button>
       </DialogTrigger>
