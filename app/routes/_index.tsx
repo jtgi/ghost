@@ -16,14 +16,14 @@ import { Farcaster } from "~/components/icons/farcaster";
 // export meta
 export const meta: MetaFunction<typeof loader> = () => {
   return [
-    { title: "anon" },
+    { title: "ghost" },
     {
       property: "og:title",
-      content: "anon",
+      content: "ghost",
     },
     {
       name: "description",
-      content: "team based trolling on farcaster",
+      content: "team based alts on farcaster",
     },
   ];
 };
@@ -48,7 +48,7 @@ export default function Home() {
           <Link to="/~" className="no-underline">
             <h1 className="text-6xl logo opacity-80">ghost</h1>
           </Link>
-          <h2 className="font-normal mb-8 opacity-70 ">Team based trolling on farcaster</h2>
+          <h2 className="font-normal mb-8 opacity-70 ">cast from an alt as a team</h2>
         </div>
       </div>
 
